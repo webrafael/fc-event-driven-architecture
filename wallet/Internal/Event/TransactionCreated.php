@@ -22,7 +22,7 @@ class TransactionCreated implements IEvent
 
     public function getPayload()
     {
-        return $this->payload;
+        json_encode($this->payload, JSON_NUMERIC_CHECK);
     }
 
     public function setPayload($payload)

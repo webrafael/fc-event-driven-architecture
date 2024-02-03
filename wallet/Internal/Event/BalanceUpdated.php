@@ -22,7 +22,7 @@ class BalanceUpdated implements IEvent
 
     public function getPayload()
     {
-        return $this->payload;
+        return json_encode($this->payload, JSON_NUMERIC_CHECK);
     }
 
     public function setPayload($payload)
