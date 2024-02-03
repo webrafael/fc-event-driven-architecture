@@ -16,6 +16,16 @@ class TransactionEntity
         public ?DateTime $createdAt = null,
     ) {
         $this->validation();
+
+        $this->debitFromAccount();
+        $this->creditToAccount();
+    }
+
+    public function creditToAccount(): float
+    {
+        $this->accountTo->credit($this->amount);
+
+        return $this->accountTo->balance;
     }
 
     public function debitFromAccount(): float
