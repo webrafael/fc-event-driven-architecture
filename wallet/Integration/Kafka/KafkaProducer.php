@@ -16,7 +16,7 @@ class KafkaProducer
     public function produce($topicName, $message)
     {
         $topic = $this->producer->newTopic($topicName);
-        $topic->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($message, JSON_NUMERIC_CHECK));
+        $topic->produce(RD_KAFKA_PARTITION_UA, 0, $message);
         $this->producer->poll(0);
     }
 }
