@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  app:
+    build: ./docker/php-8.2
+    container_name: fc-event-driven-architecture-app
+    volumes:
+      - ./:/var/www
+    networks:
+      - fc-event-driven-architecture
+    depends_on:
+      - mysql
+
+  nginx:
+      image: nginx:latest
+      container_name: fc-event-driven-architecture-nginx
+      restart: always
+      tty: true
+      ports:
+          - "3003:3003"
+      volumes:
+          - .:/var/www
+          - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      networks:
+          - fc-event-driven-architecture
+      depends_on:
+          - app
+
+  mysql:
+    image: mysql:8
+    container_name: fc-event-driven-architecture-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wallet
+      MYSQL_PASSWORD: root
+    ports:
+      - 3306:3306
+    networks:
+      - fc-event-driven-architecture
+    volumes:
+      - .docker/mysql:/var/lib/mysql
+
+networks:
+    fc-event-driven-architecture:
+        driver: bridge
