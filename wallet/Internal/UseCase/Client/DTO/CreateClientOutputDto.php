@@ -5,6 +5,7 @@ use DateTime;
 class CreateClientOutputDto
 {
     public function __construct(
+        public ?string $id = null,
         public ?string $name = null,
         public ?string $email = null,
         public ?DateTime $createdAt = null,
