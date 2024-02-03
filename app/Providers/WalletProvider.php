@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Wallet\Internal\Gateway\ClientGateway;
 use Wallet\Internal\Gateway\AccountGateway;
+use Wallet\Internal\Gateway\BalanceGateway;
 use Wallet\Integration\Events\EventDispatcher;
 use App\Repositories\Transaction\DBTransaction;
 use Wallet\Internal\Gateway\TransactionGateway;
@@ -13,6 +14,7 @@ use Wallet\Integration\Events\Contracts\IEventDispatcher;
 use App\Repositories\Elloquent\AccountElloquentRepository;
 use App\Repositories\Elloquent\TransactionElloquentRepository;
 use Wallet\Internal\Gateway\Transaction\DBTransactionInterface;
+use App\Repositories\Elloquent\BalanceGatewayElloquentRepository;
 
 class WalletProvider extends ServiceProvider
 {
@@ -52,6 +54,11 @@ class WalletProvider extends ServiceProvider
         $this->app->singleton(
             TransactionGateway::class,
             TransactionElloquentRepository::class
+        );
+
+        $this->app->singleton(
+            BalanceGateway::class,
+            BalanceGatewayElloquentRepository::class
         );
 
         $this->app->singleton(

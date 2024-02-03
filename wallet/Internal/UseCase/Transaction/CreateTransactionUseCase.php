@@ -45,6 +45,14 @@ class CreateTransactionUseCase
             $accountFrom = $this->accountGateway->findById($input->account_id_from);
             $accountTo = $this->accountGateway->findById($input->account_id_to);
 
+            if (!$accountFrom) {
+                throw new InvalidUseCaseException('Usuario de origem nao encontrado.');
+            }
+
+            if (!$accountTo) {
+                throw new InvalidUseCaseException('Usuario de destino nao encontrado.');
+            }
+
             $transaction = new TransactionEntity(
                 id: Uuid::uuid4(),
                 accountFrom: $accountFrom,

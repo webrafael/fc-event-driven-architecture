@@ -35,7 +35,7 @@ class AccountElloquentRepository implements AccountGateway
     {
         $client  = null;
         $account = $this->account->where(['id' => $id])->first();
-        $findClient = $this->client->where(['id' => $account->client_id])->first();
+        $findClient = $this->client->where(['id' => $account?->client_id])->first();
 
         if ($account && $findClient) {
             $client = new ClientEntity(
@@ -63,7 +63,7 @@ class AccountElloquentRepository implements AccountGateway
 
     public function updateBalance(AccountEntity $account): AccountEntity
     {
-        $findAccount = $this->account->where(['client_id' => $account->clientId])->first();
+        $findAccount = $this->account->where(['client_id' => $account?->clientId])->first();
 
         if (! is_null($findAccount)) {
             $findAccount->balance = $account->balance;

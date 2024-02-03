@@ -7,6 +7,15 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Início
+
+Ao rodar o comando `docker compose up -d` será necessário aguardar as instalações internas do laravel (composer / migrations / seeders) antes de testar os endpoints.
+
+## Teste de endpoints
+
+Para testar os endpoints basta acessar o arquivo localizado dentro de `wallet/api/client.http`;
+Será necessário efetuar um select no banco de dados para pegar os ids gerados pelo seeder do laravel.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
