@@ -6,7 +6,10 @@ use Wallet\Internal\Gateway\AccountGateway;
 use Wallet\Integration\Events\Contracts\IEvent;
 use Wallet\Internal\Gateway\TransactionGateway;
 use Wallet\Integration\Events\Contracts\IEventDispatcher;
+use Wallet\Integration\Kafka\KafkaProducer;
 use Wallet\Internal\Entity\Transaction\TransactionEntity;
+use Wallet\Internal\Event\Handler\BalanceUpdatedKafka;
+use Wallet\Internal\Event\Handler\TransactionCreatedKafka;
 use Wallet\Internal\UseCase\Exception\InvalidUseCaseException;
 use Wallet\Internal\Gateway\Transaction\DBTransactionInterface;
 use Wallet\Internal\UseCase\Transaction\DTO\BalanceUpdatedOutputDto;
@@ -15,14 +18,26 @@ use Wallet\Internal\UseCase\Transaction\DTO\CreateTransactionOutputDto;
 
 class CreateTransactionUseCase
 {
+    protected IEvent $balanceUpdated;
+    protected IEvent $transactionCreated;
+
     public function __construct(
         protected AccountGateway $accountGateway,
         protected TransactionGateway $transactionGateway,
+        protected DBTransactionInterface $transaction,
         protected IEventDispatcher $eventDispatcher,
-        protected IEvent $transactionCreated,
-        protected IEvent $balanceUpdated,
-        protected DBTransactionInterface $transaction
     ) { }
+
+    public function withEvents(IEvent $balanceUpdated, IEvent $transactionCreated)
+    {
+        $this->balanceUpdated = $balanceUpdated;
+        $this->transactionCreated = $transactionCreated;
+
+        $this->eventDispatcher->register($this->balanceUpdated->getName(), new BalanceUpdatedKafka(new KafkaProducer));
+        $this->eventDispatcher->register($this->transactionCreated->getName(), new TransactionCreatedKafka(new KafkaProducer));
+
+        return $this;
+    }
 
     public function execute(CreateTransactionInputDto $input): CreateTransactionOutputDto
     {
@@ -33,9 +48,9 @@ class CreateTransactionUseCase
             $transaction = new TransactionEntity(
                 id: Uuid::uuid4(),
                 accountFrom: $accountFrom,
-                accountFromId: $accountFrom->id,
+                accountFromId: $accountFrom->clientId,
                 accountTo: $accountTo,
-                accountToId: $accountTo->id,
+                accountToId: $accountTo->clientId,
                 amount: $input->amount,
                 createdAt: new DateTime('now')
             );
@@ -61,17 +76,24 @@ class CreateTransactionUseCase
 
             $this->transactionGateway->create($transaction);
 
-            $this->transactionCreated->setPayload($output);
-            $this->eventDispatcher->dispatch($this->transactionCreated);
+            if (! is_null($this->transactionCreated) && !is_null($this->balanceUpdated)) {
 
-            $this->balanceUpdated->setPayload($balanceUpdatedOutput);
-            $this->eventDispatcher->dispatch($this->balanceUpdated);
+                $this->transactionCreated->setPayload($output);
+                $this->eventDispatcher->dispatch($this->transactionCreated);
+
+                $this->balanceUpdated->setPayload($balanceUpdatedOutput);
+                $this->eventDispatcher->dispatch($this->balanceUpdated);
+            }
 
             $this->transaction->commit();
 
             return $output;
 
-        } catch (\Exception $exc) {
+        } catch (\Throwable $thr) {
+            $this->transaction->rollback();
+            throw new InvalidUseCaseException($thr->getMessage());
+        }
+        catch (\Exception $exc) {
             $this->transaction->rollback();
             throw new InvalidUseCaseException($exc->getMessage());
         }
