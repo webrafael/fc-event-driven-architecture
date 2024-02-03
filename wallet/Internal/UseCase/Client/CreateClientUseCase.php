@@ -27,6 +27,7 @@ class CreateClientUseCase
             ));
 
             $output = new CreateClientOutputDto(
+                id: $repository->id,
                 name: $repository->name,
                 email: $repository->email,
                 createdAt: $repository->createdAt,
