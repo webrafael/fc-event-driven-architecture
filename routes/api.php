@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,9 +15,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return response()->json([
-        'msg' => 'oiee'
-    ]);
-});
+Route::resource('/clients', ClientController::class);
+Route::resource('/accounts', AccountController::class);
+Route::resource('/transactions', TransactionController::class);
