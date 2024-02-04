@@ -2,10 +2,13 @@
 
 use DateTime;
 use Wallet\Internal\Entity\Client\ClientEntity;
+use Wallet\Internal\Shared\MonetaryCalculation;
 use Wallet\Internal\Entity\Exception\InvalidEntityException;
 
 class AccountEntity
 {
+    private MonetaryCalculation $calculator;
+
     /**
      * @param string|null $id
      * @param ClientEntity|null $client
@@ -18,34 +21,22 @@ class AccountEntity
         public ?string $id = null,
         public ?ClientEntity $client = null,
         public ?string $clientId = null,
-        public float $balance = 0.0,
+        public float|int $balance = 0.0,
         public ?DateTime $createdAt = null,
         public ?DateTime $updatedAt = null
-    ) { }
+    ) {
+        $this->calculator = new MonetaryCalculation($this->balance);
+    }
 
-    public function credit(float $amount)
+    public function credit(float|int $amount)
     {
-        $this->balance += $amount;
+        $this->balance   = $this->calculator->credit($amount)->getBalance();
         $this->updatedAt = new DateTime('now');
     }
 
-    public function debit(float $value)
+    public function debit(float|int $value)
     {
-        $this->canDebit($value);
-
-        $value = strval($value);
-        $current = strval($this->balance);
-        $result = bcsub($current, $value, 2);
-
-        $this->balance = floatval($result);
-
+        $this->balance   = $this->calculator->debit($value)->getBalance();
         $this->updatedAt = new DateTime('now');
-    }
-
-    private function canDebit(float $amount)
-    {
-        if ($this->balance < $amount) {
-            throw new InvalidEntityException("Saldo insuficiente");
-        }
     }
 }
