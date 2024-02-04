@@ -9,7 +9,7 @@
 
 <h1 align="center">Apache Kafka + Laravel 10 (PHP 8) <br> Event Driven Architecture</h1>
 
-## Detalhes do projeto
+**Detalhes do projeto**
 
 - Clean Architecture
 - Event Driven Architecture
