@@ -99,11 +99,11 @@ class CreateTransactionUseCase
 
         } catch (\Throwable $thr) {
             $this->transaction->rollback();
-            throw new InvalidUseCaseException($thr->getMessage());
+            throw new InvalidUseCaseException($thr->getMessage(), 500);
         }
         catch (\Exception $exc) {
             $this->transaction->rollback();
-            throw new InvalidUseCaseException($exc->getMessage());
+            throw new InvalidUseCaseException($exc->getMessage(), 500);
         }
     }
 }

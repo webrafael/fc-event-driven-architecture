@@ -25,7 +25,7 @@ class CreateAccountUseCase
             $client = $this->clientGateway->get($input->client_id);
 
             if (! $client) {
-                throw new InvalidUseCaseException("Client not found");
+                throw new InvalidUseCaseException("Cliente não encontrado");
             }
 
             $repository = $this->accountGateway->save(new AccountEntity(
