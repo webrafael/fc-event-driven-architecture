@@ -34,7 +34,9 @@ E para visualizar cada tópico basta acessálo o tópico correspondente e ir na 
 
 A api do laravel fica disponível no `http://localhost:3003` para explorar os endpoints.
 
-Para testar os endpoints basta acessar o arquivo localizado dentro de `wallet/api/client.http`;
+Para testar os endpoints basta acessar o arquivo localizado dentro de `wallet/api/client.http`. Para utilizar esta funcionalidade basta instalar a extensão do vscode chamada `REST CLIENT` que será possível explorar os endpoints através deste arquivo conforme o print abaixo.
+<img src="./api.png" alt="Kafka">
+
 Será necessário efetuar um select no banco de dados para pegar os ids gerados pelo seeder do laravel.
 
 ## About Laravel
