@@ -3,7 +3,6 @@
 use DateTime;
 use Wallet\Internal\Entity\Client\ClientEntity;
 use Wallet\Internal\Shared\MonetaryCalculation;
-use Wallet\Internal\Entity\Exception\InvalidEntityException;
 
 class AccountEntity
 {
