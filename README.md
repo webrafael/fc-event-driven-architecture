@@ -7,6 +7,14 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+<h1 align="center">Apache Kafka + Laravel 10 (PHP 8) <br> Event Driven Architecture</h1>
+
+## Detalhes do projeto
+
+- Clean Architecture
+- Event Driven Architecture
+- Producer Message Kafka
+
 ## Início
 
 Ao rodar o comando `docker compose up -d` será necessário aguardar as instalações internas do laravel (composer / migrations / seeders) antes de testar os endpoints.
