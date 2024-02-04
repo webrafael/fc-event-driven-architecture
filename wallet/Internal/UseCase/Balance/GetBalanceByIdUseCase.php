@@ -22,6 +22,7 @@ class GetBalanceByIdUseCase
             return new GetBalanceByIdOutputDto(
                 id: $repository->id,
                 client_id: $repository->clientId,
+                client: $repository->client,
                 balance: $repository->balance,
                 created_at: $repository->createdAt,
                 updated_at: $repository->updatedAt,

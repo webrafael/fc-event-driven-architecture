@@ -31,7 +31,7 @@ class BalanceGatewayElloquentRepository implements BalanceGateway
 
         if ($account) {
             return new AccountEntity(
-                id: $account->index,
+                id: $account->id,
                 client: $client,
                 clientId: $account->client_id,
                 balance: $account->balance,
