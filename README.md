@@ -11,7 +11,20 @@
 
 Ao rodar o comando `docker compose up -d` será necessário aguardar as instalações internas do laravel (composer / migrations / seeders) antes de testar os endpoints.
 
+O painel de controle do Kafka fica disponível no `http://localhost:9021` é preciso aguardar uns segundos para que o container fique disponível para acessar.
+
+Ao acessar o painel administrativo do kafka você irá visualizar esta tela abaixo. Basta clicar no painel de controle do cluster para ter acesso às funcionalidades internas.
+<img src="./kafka-1.png" alt="Kafka">
+
+Para acompanhar as mensagens sendo criadas será necessário entrar na ária de tópicos e criar 2 tópicos (balances, transactions).
+<img src="./kafka-2.png" alt="Kafka">
+
+E para visualizar cada tópico basta acessálo o tópico correspondente e ir na aba de mensagens. Desta forma basta executar as transações pelos endpoints que as mensagens começam a aparecer em tempo real.
+<img src="./kafka-3.png" alt="Kafka">
+
 ## Teste de endpoints
+
+A api do laravel fica disponível no `http://localhost:3003` para explorar os endpoints.
 
 Para testar os endpoints basta acessar o arquivo localizado dentro de `wallet/api/client.http`;
 Será necessário efetuar um select no banco de dados para pegar os ids gerados pelo seeder do laravel.
