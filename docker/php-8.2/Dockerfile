@@ -16,6 +16,12 @@ RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 RUN pecl install rdkafka && docker-php-ext-enable rdkafka
 
+# Install dockerize to wait for dependent containers
+ENV DOCKERIZE_VERSION v0.6.1
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
 # Configure Xdebug
 COPY ./conf.d/php.ini /usr/local/etc/php/php.ini
 COPY ./conf.d/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini

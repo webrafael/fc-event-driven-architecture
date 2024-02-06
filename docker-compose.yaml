@@ -7,7 +7,7 @@ services:
     volumes:
       - ./:/var/www
     command: bash -c "composer install --working-dir=/var/www && php /var/www/artisan migrate --seed && php-fpm"
-    entrypoint: ["docker-php-entrypoint"]
+    entrypoint: dockerize -wait tcp://mysql:3306 -timeout 20s docker-php-entrypoint
     networks:
       - fc-event-driven-architecture
     depends_on:
