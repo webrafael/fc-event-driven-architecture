@@ -2,6 +2,7 @@
 
 use DateTime;
 use Wallet\Internal\Entity\Account\AccountEntity;
+use Wallet\Internal\Entity\Exception\InvalidEntityException;
 
 class TransactionEntity
 {
@@ -18,17 +19,21 @@ class TransactionEntity
         $this->creditToAccount();
     }
 
-    public function creditToAccount(): void
-    {
-        if (! is_null($this->accountTo)) {
-            $this->accountTo->credit($this->amount);
-        }
-    }
-
     public function debitFromAccount(): void
     {
-        if (! is_null($this->accountFrom)) {
-            $this->accountFrom->debit($this->amount);
+        if (is_null($this->accountFrom)) {
+            throw new InvalidEntityException("É necessário uma conta de origem para efetuar uma transação.");
         }
+
+        $this->accountFrom->debit($this->amount);
+    }
+
+    public function creditToAccount(): void
+    {
+        if (is_null($this->accountTo)) {
+            throw new InvalidEntityException("É necessário uma conta de destino para efetuar uma transação.");
+        }
+
+        $this->accountTo->credit($this->amount);
     }
 }
