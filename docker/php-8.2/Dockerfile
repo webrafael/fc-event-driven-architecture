@@ -8,8 +8,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     librdkafka-dev \
     zip \
-    unzip \
-    wget
+    unzip
 
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
 
@@ -18,10 +17,12 @@ RUN pecl install xdebug && docker-php-ext-enable xdebug
 RUN pecl install rdkafka && docker-php-ext-enable rdkafka
 
 # Install dockerize to wait for dependent containers
-ENV DOCKERIZE_VERSION v0.6.1
-RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+ENV DOCKERIZE_VERSION v0.7.0
+
+RUN apt-get update \
+    && apt-get install -y wget \
+    && wget -O - https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar xzf - -C /usr/local/bin \
+    && apt-get autoremove -yqq --purge wget && rm -rf /var/lib/apt/lists/*
 
 # Configure Xdebug
 COPY ./conf.d/php.ini /usr/local/etc/php/php.ini
